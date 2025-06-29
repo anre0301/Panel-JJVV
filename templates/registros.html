@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mis Registros</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      backdrop-filter: blur(7px);
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+
+    .contenido {
+      position: relative;
+      z-index: 1;
+      padding: 30px 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+
+    h2 {
+      color: #f8f8f8;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+    }
+
+    .registro {
+      border-radius: 12px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    }
+
+    .registro-cabecera {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: rgba(33, 33, 33, 0.88);
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .registro-cabecera:hover {
+      background: rgba(20, 20, 20, 0.95);
+    }
+
+    .registro-detalle {
+      display: none;
+      padding: 20px;
+      background: #f9f9f9;
+    }
+
+    .registro-detalle p {
+      margin: 5px 0;
+      font-size: 15px;
+      color: #444;
+    }
+
+    .registro-detalle strong {
+      color: #1f3a5f;
+    }
+
+    .acciones {
+      text-align: right;
+      margin-top: 12px;
+    }
+
+    .eliminar-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .eliminar-btn:hover {
+      background: #c0392b;
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin-top: 40px;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      background: #1f3a5f;
+      padding: 12px 20px;
+      border-radius: 8px;
+      width: max-content;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .volver:hover {
+      background: #162b45;
+    }
+
+    .flecha {
+      font-size: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .flecha.abierta {
+      transform: rotate(90deg);
+    }
+
+    .estado-verde {
+      color: #2ecc71;
+      font-weight: bold;
+    }
+
+    .estado-rojo {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .registro-detalle p { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenido">
+    <h2>Registros de {{ usuario }}</h2>
+
+    {% for r in registros|reverse %}
+      <div class="registro">
+        <div class="registro-cabecera" onclick="toggleDetalle(this)">
+          {{ r.accion|capitalize }} — {{ r.fecha }}
+          {% if r.estado == 'aceptado' %}
+            <span class="estado-verde">✅ Aceptado</span>
+          {% elif r.estado == 'rechazado' %}
+            <span class="estado-rojo">❌ Rechazado</span>
+          {% else %}
+            <span style="color: #f1c40f;">⏳ Pendiente</span>
+          {% endif %}
+          <span class="flecha">▶</span>
+        </div>
+
+        <div class="registro-detalle">
+          {% if r.accion == "agregar" %}
+            {% for campo, valor in r.datos.items() %}
+              <p><strong>{{ campo.replace("_", " ")|capitalize }}:</strong> {{ valor }}</p>
+            {% endfor %}
+          {% elif r.accion == "eliminar" %}
+            <p><strong>DNI:</strong> {{ r.datos.dni }}</p>
+            <p><strong>Fecha de creación:</strong> {{ r.datos.fecha }}</p>
+          {% endif %}
+
+          <div class="acciones">
+            <button class="eliminar-btn" onclick="mostrarModal({{ loop.index0 }})">🗑️ Eliminar</button>
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <p style="text-align:center; color: white;">No tienes registros aún.</p>
+    {% endfor %}
+
+    <a href="/panel" class="volver">⬅️ Volver al Panel</a>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="modal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:999;">
+    <div class="modal-content" style="background:white; max-width:400px; margin:15% auto; padding:30px; border-radius:10px; text-align:center;">
+      <p>¿Estás seguro que deseas eliminar este registro?</p>
+      <form method="POST" action="/eliminar_registro">
+        <input type="hidden" name="id" id="registroId">
+        <div style="margin-top: 20px;">
+          <button type="submit" class="btn-si" style="padding: 10px 20px; background: #1f3a5f; color:white; border:none; border-radius:6px;">Sí</button>
+          <button type="button" onclick="cerrarModal()" style="padding: 10px 20px; margin-left:10px; background:#ccc; border:none; border-radius:6px;">No</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function mostrarModal(id) {
+      document.getElementById('registroId').value = id;
+      document.getElementById('modal').style.display = 'block';
+    }
+
+    function cerrarModal() {
+      document.getElementById('modal').style.display = 'none';
+    }
+
+    function toggleDetalle(header) {
+      const detalle = header.nextElementSibling;
+      const flecha = header.querySelector('.flecha');
+      detalle.style.display = (detalle.style.display === 'block') ? 'none' : 'block';
+      flecha.classList.toggle('abierta');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Eliminar Miembro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+  background-size: cover;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  background-color: rgba(20, 20, 20, 0.3); /* Más oscuro y semitransparente */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #fff;
+  padding: 35px;
+  border-radius: 20px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Borde tenue */
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+    h2 {
+      margin-bottom: 24px;
+      font-size: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    h2 i {
+      color: #ff4f6d;
+    }
+
+    form label {
+      display: block;
+      text-align: left;
+      margin-top: 18px;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    form input {
+      width: 100%;
+      padding: 12px;
+      margin-top: 6px;
+      border-radius: 10px;
+      border: none;
+      background: rgba(40, 40, 40, 0.85);
+      font-size: 15px;
+      color: #fff;
+    }
+
+    form input::placeholder {
+      color: rgba(255,255,255,0.5);
+    }
+
+    .btn-container {
+      margin-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn {
+      flex: 1;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+      transition: 0.3s;
+      min-width: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .btn i {
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      background: #0056b3;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      h2 {
+        font-size: 22px;
+      }
+
+      form label {
+        font-size: 13px;
+      }
+
+      form input {
+        font-size: 14px;
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2><i class="fas fa-user-times"></i> Eliminar Miembro</h2>
+    <form method="POST" action="/solicitud/eliminar">
+      <label><i class="fas fa-id-card"></i> DNI del miembro:</label>
+      <input type="text" name="dni" placeholder="Ingrese DNI" maxlength="8" required>
+
+      <label><i class="fas fa-calendar-alt"></i> Fecha de creación:</label>
+      <input type="text" name="fecha" placeholder="DD/MM/AAAA" required>
+
+      <div class="btn-container">
+        <button type="submit" class="btn"><i class="fas fa-trash-alt"></i> Enviar Solicitud</button>
+        <a href="/panel" class="btn"><i class="fas fa-arrow-left"></i> Volver al Panel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

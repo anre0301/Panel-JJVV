@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Panel de Usuario</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      backdrop-filter: blur(8px) brightness(0.6);
+      z-index: 0;
+    }
+
+    .panel {
+      z-index: 1;
+      background-color: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+      text-align: center;
+      animation: fadeIn 0.6s ease-in-out;
+    }
+
+    h2 {
+      font-size: 28px;
+      color: #fff;
+      margin-bottom: 25px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .boton {
+      display: block;
+      background-color: #ffffff;
+      color: #4f1a74;
+      padding: 13px 16px;
+      margin: 12px auto;
+      border: none;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      text-decoration: none;
+      transition: all 0.3s;
+      max-width: 95%;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+
+    .boton:hover {
+      background-color: #e3d6f7;
+      transform: scale(1.03);
+    }
+
+    .logout {
+      background-color: #ff4d4d;
+      color: white;
+    }
+
+    .logout:hover {
+      background-color: #d73434;
+    }
+
+    .footer {
+      margin-top: 30px;
+      font-size: 13px;
+      color: #ddd;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .panel {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      .boton {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="panel">
+    <h2>Bienvenido, {{ usuario }}</h2>
+
+    <a href="/agregar" class="boton">➕ Agregar Miembro</a>
+    <a href="/eliminar" class="boton">🗑️ Quitar Miembro</a>
+    <a href="/registros" class="boton">📋 Mis Registros</a>
+
+    {% if rol == 'admin' %}
+    <a href="/solicitudes" class="boton">📨 Ver Solicitudes</a>
+	{% if rol == 'admin' %}
+  <a href="/subir_datos" class="boton">📤 Subir Datos</a>
+{% endif %}
+    {% endif %}
+
+    <a href="/logout" class="boton logout">🚪 Cerrar Sesión</a>
+
+    <div class="footer">Sistema JJ.VV © {{ anio }}</div>
+  </div>
+</body>
+</html>

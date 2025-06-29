@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solicitudes Recibidas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      backdrop-filter: blur(8px);
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+
+    .contenido {
+      position: relative;
+      z-index: 1;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      margin-bottom: 30px;
+      font-size: 30px;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    }
+
+    .solicitud {
+      background: rgba(33, 33, 33, 0.88);
+      padding: 20px 25px;
+      border-radius: 16px;
+      margin-bottom: 25px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+      color: white;
+    }
+
+    .solicitud:hover {
+      transform: scale(1.01);
+    }
+
+    .resumen {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .resumen p {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+    }
+
+    .detalle {
+      display: none;
+      margin-top: 15px;
+      background: rgba(255,255,255,0.08);
+      padding: 15px;
+      border-radius: 10px;
+    }
+
+    .detalle p {
+      margin: 6px 0;
+      font-size: 14px;
+      color: #f1f1f1;
+    }
+
+    .botones {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .botones form,
+    .botones button {
+      flex: 1 1 auto;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, #4f1a74, #742286);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s, transform 0.2s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #3a0e5d, #5c1a6e);
+      transform: scale(1.03);
+    }
+
+    .btn.eliminar {
+      background: linear-gradient(135deg, #d93434, #b22d2d);
+    }
+
+    .btn.eliminar:hover {
+      background: linear-gradient(135deg, #a32020, #8a1919);
+    }
+
+    .volver {
+      display: block;
+      text-align: center;
+      margin: 40px auto 0 auto;
+      text-decoration: none;
+      font-weight: bold;
+      color: white;
+      background: #4f1a74;
+      padding: 12px 24px;
+      border-radius: 12px;
+      width: max-content;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+
+    .volver:hover {
+      background: #3a0e5d;
+    }
+
+    .flecha {
+      font-size: 20px;
+      color: #4f1a74;
+      transition: transform 0.3s;
+    }
+
+    .flecha.abierta {
+      transform: rotate(90deg);
+    }
+
+    .estado {
+      font-weight: bold;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+
+    .estado.aceptado {
+      color: green;
+    }
+
+    .estado.rechazado {
+      color: red;
+    }
+
+    .estado.pendiente {
+      color: gray;
+    }
+
+    @media (max-width: 600px) {
+      .botones {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn {
+        font-size: 13px;
+        padding: 10px;
+      }
+
+      h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="contenido">
+    <h2><i class="fas fa-inbox"></i> Solicitudes Recibidas</h2>
+
+    {% for solicitud in solicitudes|reverse %}
+      <div class="solicitud">
+        <div class="resumen" onclick="toggleDetalle(this)">
+          <p><i class="fas fa-tag"></i> Tipo: {{ solicitud.tipo | capitalize }} — <i class="fas fa-user"></i> Usuario: {{ solicitud.usuario }}</p>
+          <span class="flecha"><i class="fas fa-chevron-right"></i></span>
+        </div>
+
+        <div class="detalle">
+          <p><i class="fas fa-calendar-alt"></i> <strong>Fecha:</strong> {{ solicitud.fecha_solicitud }}</p>
+
+          {% if solicitud.datos is defined and solicitud.datos is mapping %}
+            {% for clave, valor in solicitud.datos.items() %}
+              <p><i class="fas fa-circle-info"></i> <strong>{{ clave | replace("_", " ") | title }}:</strong> {{ valor }}</p>
+            {% endfor %}
+          {% else %}
+            <p style="color: orange;"><i class="fas fa-triangle-exclamation"></i> Datos no disponibles o formato inválido.</p>
+          {% endif %}
+
+          <p class="estado {{ solicitud.estado|default('pendiente') }}">
+            <i class="fas fa-flag"></i> Estado:
+            {% if solicitud.estado == 'aceptado' %}
+              <span class="estado aceptado"><i class="fas fa-check-circle"></i> Aceptado</span>
+            {% elif solicitud.estado == 'rechazado' %}
+              <span class="estado rechazado"><i class="fas fa-times-circle"></i> Rechazado</span>
+            {% else %}
+              <span class="estado pendiente"><i class="fas fa-hourglass-half"></i> Pendiente</span>
+            {% endif %}
+          </p>
+
+          <div class="botones">
+            <form method="POST" action="/aprobar">
+              <input type="hidden" name="solicitud_id" value="{{ solicitud.id }}">
+              <button class="btn"><i class="fas fa-check"></i> Aceptar</button>
+            </form>
+            <form method="POST" action="/rechazar">
+              <input type="hidden" name="solicitud_id" value="{{ solicitud.id }}">
+              <button class="btn eliminar"><i class="fas fa-times"></i> Rechazar</button>
+            </form>
+            {% if solicitud.datos is defined and solicitud.datos is mapping %}
+              <button class="btn"
+                      data-json='{{ solicitud.datos | tojson | safe }}'
+                      data-dni='{{ solicitud.datos.dni | default("solicitud") }}'
+                      onclick="descargarDesdeBoton(this)">
+                <i class="fas fa-download"></i> JSON
+              </button>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+    <a href="/panel" class="volver"><i class="fas fa-arrow-left"></i> Volver al Panel</a>
+  </div>
+
+  <script>
+    function toggleDetalle(element) {
+      const detalle = element.nextElementSibling;
+      const flecha = element.querySelector('.flecha i');
+      detalle.style.display = detalle.style.display === "block" ? "none" : "block";
+      flecha.classList.toggle("fa-chevron-right");
+      flecha.classList.toggle("fa-chevron-down");
+    }
+
+    function descargarDesdeBoton(boton) {
+      try {
+        const data = JSON.parse(boton.getAttribute('data-json'));
+        const nombreArchivo = boton.getAttribute('data-dni') + '.json';
+
+        const contenido = JSON.stringify(data, null, 2);
+        const blob = new Blob([contenido], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+
+        const enlace = document.createElement('a');
+        enlace.href = url;
+        enlace.download = nombreArchivo;
+        document.body.appendChild(enlace);
+        enlace.click();
+        document.body.removeChild(enlace);
+      } catch (e) {
+        alert("⚠️ Error al descargar JSON.");
+        console.error(e);
+      }
+    }
+  </script>
+</body>
+</html>

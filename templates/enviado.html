@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Solicitud Enviada</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+      background-size: cover;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .mensaje {
+      background: rgba(255, 255, 255, 0.88);
+      padding: 40px 30px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.6s ease;
+      width: 90%;
+      max-width: 430px;
+    }
+
+    .icono {
+      width: 100px;
+      margin-bottom: 15px;
+      animation: pulse 1.5s infinite;
+    }
+
+    h2 {
+      color: #00b894;
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #333;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    a {
+      display: inline-block;
+      background: linear-gradient(135deg, #0072ff, #00c6ff);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      transition: 0.3s;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    a::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.6s ease;
+    }
+
+    a:hover::before {
+      left: 100%;
+    }
+
+    a:hover {
+      transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 480px) {
+      .mensaje {
+        padding: 30px 20px;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      p {
+        font-size: 15px;
+      }
+
+      a {
+        padding: 10px 24px;
+        font-size: 14px;
+      }
+
+      .icono {
+        width: 80px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="mensaje">
+    <img src="https://cdn-icons-png.flaticon.com/512/845/845646.png" alt="Éxito" class="icono">
+    <h2>Solicitud enviada con éxito</h2>
+    <p>Tu solicitud ha sido enviada a la base de datos.<br>Espera entre <strong>15 - 20 min</strong> aprox. para aprobar su solicitud.</p>
+    <a href="/panel">Volver al Panel</a>
+  </div>
+
+  <!-- Audio + Reproducción forzada -->
+  <audio id="ding" preload="auto">
+    <source src="https://www.myinstants.com/media/sounds/ding-sound-effect_2.mp3" type="audio/mpeg">
+  </audio>
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const audio = document.getElementById('ding');
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          document.addEventListener('click', () => audio.play(), { once: true });
+        });
+      }
+    });
+  </script>
+</body>
+</html>

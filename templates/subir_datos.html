@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Subir Datos | Admin</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://pbs.twimg.com/media/FAelOGbWEAEcy-j.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      backdrop-filter: blur(12px);
+    }
+
+    .formulario {
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 15px;
+      padding: 25px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      margin-bottom: 40px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      margin-top: 25px;
+      padding: 12px;
+      width: 100%;
+      border: none;
+      background-color: #ffffff;
+      color: #742286;
+      font-size: 1rem;
+      font-weight: bold;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #e4e4e4;
+    }
+
+    .icon {
+      font-size: 1.2rem;
+    }
+
+    .volver-btn {
+      background-color: transparent;
+      border: 2px solid #fff;
+      color: white;
+      font-weight: 500;
+      padding: 10px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .volver-btn:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Mensaje centrado */
+    .mensaje {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.7);
+      padding: 30px 40px;
+      border-radius: 15px;
+      text-align: center;
+      z-index: 9999;
+      color: #fff;
+      font-size: 1.2rem;
+      animation: fadeIn 0.5s ease-in-out;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -60%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+  </style>
+</head>
+<body>
+
+  {% if mensaje %}
+    <div class="mensaje">
+      <p>{{ mensaje }}</p>
+      <a href="/subir_datos" class="volver-btn"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+    </div>
+  {% endif %}
+
+  <div class="formulario">
+    <h2><i class="fa-solid fa-user-plus icon"></i> Subir Nuevo Miembro</h2>
+    <form action="/subir_datos" method="post" enctype="multipart/form-data">
+      <label>📄 Archivo JSON del miembro:</label>
+      <input type="file" name="json_file" accept="application/json" required>
+
+      <label>🖼️ Foto del rostro:</label>
+      <input type="file" name="image" accept="image/*" required>
+
+      <input type="hidden" name="tipo" value="nuevo">
+      <button type="submit"><i class="fa-solid fa-upload"></i> Subir Nuevo Miembro</button>
+    </form>
+  </div>
+
+  <div class="formulario">
+    <h2><i class="fa-solid fa-user-xmark icon"></i> Eliminar Miembro</h2>
+    <form action="/subir_datos" method="post">
+      <label>🔍 DNI a eliminar:</label>
+      <input type="text" name="dni" placeholder="Ej: 12345678" required>
+
+      <input type="hidden" name="tipo" value="eliminar">
+      <button type="submit"><i class="fa-solid fa-trash-can"></i> Eliminar Miembro</button>
+    </form>
+  </div>
+
+  <a href="/panel" class="volver-btn"><i class="fa-solid fa-house"></i> Volver al Panel</a>
+
+</body>
+</html>
